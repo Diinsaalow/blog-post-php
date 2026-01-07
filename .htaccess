@@ -1,0 +1,9 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /blog-post/
+    
+    # If the request is for a real file or directory in public, serve it
+    RewriteCond %{REQUEST_URI} !^/blog-post/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
