@@ -1,8 +1,14 @@
 /**
- * Blog Post Application - Dashboard JavaScript
+ * BLOGGIES - Dashboard JavaScript
+ * Handles dashboard interactions and UI enhancements
  */
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Lucide icons ONCE after DOM is ready
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+    
     // Sidebar toggle for mobile (if needed)
     const sidebarToggle = document.getElementById('sidebar-toggle');
     const sidebar = document.getElementById('sidebar');
@@ -86,10 +92,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Image preview for URL inputs
     const imageUrlInputs = document.querySelectorAll('input[name="cover_image_url"]');
     imageUrlInputs.forEach(function(input) {
-        const preview = document.createElement('div');
-        preview.className = 'mt-2 hidden';
-        preview.innerHTML = '<img src="" alt="Preview" class="w-32 h-20 object-cover rounded border">';
-        input.parentNode.appendChild(preview);
+        let preview = input.parentNode.querySelector('#image-preview');
+        
+        if (!preview) {
+            preview = document.createElement('div');
+            preview.id = 'image-preview';
+            preview.className = 'mt-2 hidden';
+            preview.innerHTML = '<img src="" alt="Preview" class="w-32 h-20 object-cover rounded border border-gray-200">';
+            input.parentNode.appendChild(preview);
+        }
         
         input.addEventListener('input', function() {
             const url = this.value.trim();
@@ -123,5 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 500);
         });
     }
+    
+    // Table row hover effects - using CSS classes instead of inline styles
+    // This is handled by Tailwind's hover:bg-gray-50 class, so we can remove this
 });
-

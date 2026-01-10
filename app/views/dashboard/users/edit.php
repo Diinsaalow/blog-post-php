@@ -1,31 +1,19 @@
 <?php
-/**
- * Dashboard Edit User View
- */
-
+require_once BASE_PATH . '/app/helpers/functions.php';
 ob_start();
 ?>
 
 <!-- Back Link -->
 <div class="mb-6">
-    <a href="/blog-post/dashboard/users" class="text-gray-500 hover:text-primary transition-colors flex items-center space-x-2">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-        </svg>
+    <a href="<?= url('/dashboard/users') ?>" class="inline-flex items-center gap-2 text-gray-500 hover:text-blue-600 transition-colors">
+        <i data-lucide="chevron-left" class="w-5 h-5"></i>
         <span>Back to Users</span>
     </a>
 </div>
 
-<!-- Flash Messages -->
-<?php if (!empty($error)): ?>
-    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-        <?= htmlspecialchars($error) ?>
-    </div>
-<?php endif; ?>
-
 <!-- Form -->
-<div class="bg-white rounded-xl shadow-md p-6 max-w-2xl">
-    <form action="/blog-post/dashboard/users/<?= $user['id'] ?>" method="POST" class="space-y-6">
+<div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 max-w-2xl">
+    <form action="<?= url('/dashboard/users/' . $user['id']) ?>" method="POST" class="space-y-6">
         <input type="hidden" name="_method" value="PUT">
         
         <!-- Username -->
@@ -39,7 +27,7 @@ ob_start();
                 name="username" 
                 required
                 value="<?= htmlspecialchars($user['username']) ?>"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
             >
         </div>
         
@@ -54,7 +42,7 @@ ob_start();
                 name="email" 
                 required
                 value="<?= htmlspecialchars($user['email']) ?>"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
             >
         </div>
         
@@ -66,7 +54,7 @@ ob_start();
             <select 
                 id="role" 
                 name="role"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
             >
                 <option value="user" <?= $user['role'] === 'user' ? 'selected' : '' ?>>User</option>
                 <option value="admin" <?= $user['role'] === 'admin' ? 'selected' : '' ?>>Admin</option>
@@ -81,7 +69,7 @@ ob_start();
             <select 
                 id="status" 
                 name="status"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
             >
                 <option value="active" <?= $user['status'] === 'active' ? 'selected' : '' ?>>Active</option>
                 <option value="suspended" <?= $user['status'] === 'suspended' ? 'selected' : '' ?>>Suspended</option>
@@ -90,10 +78,11 @@ ob_start();
         
         <!-- Submit -->
         <div class="flex justify-end space-x-4">
-            <a href="/blog-post/dashboard/users" class="px-6 py-3 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+            <a href="<?= url('/dashboard/users') ?>" class="inline-flex items-center px-6 py-3 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
                 Cancel
             </a>
-            <button type="submit" class="px-6 py-3 bg-accent hover:bg-red-600 text-white rounded-lg transition-colors">
+            <button type="submit" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-sm">
+                <i data-lucide="save" class="w-4 h-4 mr-2"></i>
                 Update User
             </button>
         </div>
@@ -104,4 +93,3 @@ ob_start();
 $content = ob_get_clean();
 require_once BASE_PATH . '/app/views/dashboard/layouts/main.php';
 ?>
-

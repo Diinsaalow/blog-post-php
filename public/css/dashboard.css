@@ -1,216 +1,192 @@
 /**
- * Blog Post Application - Dashboard Styles
- * Custom styles for the admin dashboard
+ * BLOGGIES - Dashboard Styles
+ * Custom styles for the admin dashboard matching website brand
  */
 
-/* Custom scrollbar */
+:root {
+    --primary: oklch(0.623 0.214 259.815);
+    --primary-foreground: oklch(0.97 0.014 254.604);
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.141 0.005 285.823);
+    --muted: oklch(0.967 0.001 286.375);
+    --muted-foreground: oklch(0.552 0.016 285.938);
+    --border: oklch(0.92 0.004 286.32);
+    --ring: oklch(0.623 0.214 259.815);
+    --destructive: oklch(0.577 0.245 27.325);
+}
+
+/* =========================================
+   Scrollbar Styles
+   ========================================= */
+
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+    width: 8px;
+    height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1a2e;
+    background: var(--muted);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #4a4a5e;
-  border-radius: 4px;
+    background: var(--muted-foreground);
+    border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #5a5a6e;
+    background: var(--foreground);
 }
 
 /* Sidebar scrollbar */
 aside::-webkit-scrollbar {
-  width: 4px;
+    width: 4px;
 }
 
 aside::-webkit-scrollbar-track {
-  background: transparent;
+    background: transparent;
 }
 
 aside::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 2px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
 }
 
-/* Smooth transitions */
-* {
-  scroll-behavior: smooth;
+aside::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
 }
 
-/* Focus styles */
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
+/* =========================================
+   Card Hover Effect
+   ========================================= */
+
+.card-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Table styles */
+.card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* =========================================
+   Animations
+   ========================================= */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+/* =========================================
+   Table Styles
+   ========================================= */
+
 table {
-  width: 100%;
-  border-collapse: collapse;
+    width: 100%;
+    border-collapse: collapse;
 }
 
 table th,
 table td {
-  text-align: left;
+    text-align: left;
 }
 
-/* Animation classes */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* =========================================
+   Form Styles
+   ========================================= */
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
 }
 
-.animate-fadeIn {
-  animation: fadeIn 0.3s ease-out;
-}
+/* =========================================
+   Badge Styles
+   ========================================= */
 
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Card styles */
-.dashboard-card {
-  transition: all 0.2s ease-in-out;
-}
-
-.dashboard-card:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
-}
-
-/* Sidebar active link */
-.sidebar-active {
-  background: #e94560;
-  color: white;
-}
-
-/* Form styles */
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-.form-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #374151;
-}
-
-.form-input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  transition: all 0.2s;
-}
-
-.form-input:focus {
-  border-color: #e94560;
-  box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.1);
-}
-
-/* Alert styles */
-.alert {
-  padding: 1rem;
-  border-radius: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.alert-success {
-  background: #d1fae5;
-  border: 1px solid #a7f3d0;
-  color: #065f46;
-}
-
-.alert-error {
-  background: #fee2e2;
-  border: 1px solid #fecaca;
-  color: #991b1b;
-}
-
-.alert-warning {
-  background: #fef3c7;
-  border: 1px solid #fde68a;
-  color: #92400e;
-}
-
-/* Badge styles */
 .badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.25rem 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 9999px;
 }
 
-.badge-success {
-  background: #d1fae5;
-  color: #065f46;
+/* =========================================
+   Responsive Adjustments
+   ========================================= */
+
+@media (max-width: 768px) {
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .table-responsive table {
+        min-width: 600px;
+    }
 }
 
-.badge-danger {
-  background: #fee2e2;
-  color: #991b1b;
-}
+/* =========================================
+   Loading Spinner
+   ========================================= */
 
-.badge-info {
-  background: #dbeafe;
-  color: #1e40af;
-}
-
-.badge-warning {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-/* Loading spinner */
 .spinner {
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
-  border: 2px solid #f3f3f3;
-  border-top: 2px solid #e94560;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
-/* Responsive table */
-@media (max-width: 768px) {
-  .table-responsive {
-    overflow-x: auto;
-  }
+/* =========================================
+   Selection Styles
+   ========================================= */
 
-  .table-responsive table {
-    min-width: 600px;
-  }
+::selection {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+}
+
+/* =========================================
+   Focus Styles
+   ========================================= */
+
+*:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+/* =========================================
+   Smooth Transitions
+   ========================================= */
+
+* {
+    scroll-behavior: smooth;
+}
+
+a, button {
+    transition: all 0.2s ease;
 }

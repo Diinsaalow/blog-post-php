@@ -1,116 +1,191 @@
 <?php
-/**
- * Single Post View
- * Displays a single blog post with comments
- */
+require_once BASE_PATH . '/app/helpers/functions.php';
+require_once BASE_PATH . '/core/Session.php';
+
+$isLoggedIn = Session::isLoggedIn();
+$isAdmin = Session::isAdmin();
+$userId = Session::userId();
 
 ob_start();
 ?>
 
-<article class="py-12 bg-light min-h-screen">
-    <div class="container mx-auto px-4 max-w-4xl">
-        <!-- Post Header -->
-        <header class="mb-8">
-            <div class="flex items-center space-x-4 text-sm text-gray-500 mb-4">
-                <a href="/blog-post/posts/category/<?= htmlspecialchars(strtolower($post['category'] ?? 'general')) ?>" 
-                   class="bg-accent/10 text-accent px-3 py-1 rounded-full hover:bg-accent/20 transition-colors">
-                    <?= htmlspecialchars($post['category'] ?? 'General') ?>
+<main class="pt-16">
+    <!-- Blog title and cover image -->
+    <div class="relative h-[50vh] sm:h-[60vh] bg-gray-100">
+        <!-- Navigation buttons -->
+        <div class="absolute top-0 left-0 right-0 p-6 md:p-8 max-w-4xl mx-auto z-10">
+            <div class="flex items-center justify-between">
+                <a href="javascript:history.back()" 
+                   class="inline-flex items-center px-3 py-1.5 text-sm font-medium border border-white/30 bg-white/10 backdrop-blur-sm text-white rounded-md hover:bg-white/20 transition-colors">
+                    <i data-lucide="chevron-left" class="w-4 h-4 mr-1"></i>
+                    Back
                 </a>
-                <span><?= $post['reading_time_min'] ?? 5 ?> min read</span>
-                <span><?= $post['views'] ?? 0 ?> views</span>
+
+                <?php if ($isAdmin): ?>
+                    <div class="flex items-center space-x-2">
+                        <a href="<?= url('/dashboard/posts/' . $post['id'] . '/edit') ?>" 
+                           class="inline-flex items-center px-3 py-1.5 text-sm font-medium bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                            <i data-lucide="edit" class="w-4 h-4 mr-1"></i>
+                            Edit
+                        </a>
+                        <form action="<?= url('/dashboard/posts/' . $post['id'] . '/delete') ?>" 
+                              method="POST" 
+                              class="inline"
+                              onsubmit="return confirm('Are you sure you want to delete this blog post?')">
+                            <button type="submit" 
+                                    class="inline-flex items-center px-3 py-1.5 text-sm font-medium bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors">
+                                <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i>
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                <?php endif; ?>
             </div>
-            <h1 class="font-display text-4xl md:text-5xl font-bold text-primary mb-6 leading-tight">
-                <?= htmlspecialchars($post['title']) ?>
-            </h1>
-            <div class="flex items-center space-x-4 text-gray-600">
-                <span>By <strong><?= htmlspecialchars($post['author_name'] ?? 'Admin') ?></strong></span>
-                <span>•</span>
-                <time><?= date('F d, Y', strtotime($post['created_at'])) ?></time>
-            </div>
-        </header>
-        
-        <!-- Cover Image -->
-        <?php if (!empty($post['cover_image_url'])): ?>
-            <div class="mb-8 rounded-xl overflow-hidden shadow-lg">
-                <img 
-                    src="<?= htmlspecialchars($post['cover_image_url']) ?>" 
-                    alt="<?= htmlspecialchars($post['title']) ?>"
-                    class="w-full h-auto"
-                >
-            </div>
-        <?php endif; ?>
-        
-        <!-- Post Content -->
-        <div class="bg-white rounded-xl shadow-md p-8 mb-12 prose prose-lg max-w-none">
-            <?= nl2br(htmlspecialchars($post['content'])) ?>
         </div>
         
-        <!-- Comments Section -->
-        <section class="bg-white rounded-xl shadow-md p-8">
-            <h2 class="font-display text-2xl font-bold text-primary mb-6">
-                Comments (<?= $commentCount ?>)
-            </h2>
-            
-            <?php if (Session::isLoggedIn()): ?>
-                <!-- Comment Form -->
-                <form action="/blog-post/posts/<?= $post['id'] ?>/comments" method="POST" class="mb-8">
-                    <textarea 
-                        name="content" 
-                        rows="4" 
-                        placeholder="Write a comment..."
-                        required
-                        maxlength="1000"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none"
-                    ></textarea>
-                    <div class="flex justify-end mt-3">
-                        <button type="submit" class="bg-accent hover:bg-red-600 text-white px-6 py-2 rounded-lg transition-colors">
-                            Post Comment
-                        </button>
-                    </div>
-                </form>
-            <?php else: ?>
-                <div class="bg-light rounded-lg p-4 mb-8 text-center">
-                    <p class="text-gray-600">
-                        <a href="/blog-post/login" class="text-accent hover:underline">Login</a> to leave a comment.
-                    </p>
-                </div>
+        <!-- Cover Image -->
+        <img src="<?= e($post['cover_image_url'] ?? 'https://images.unsplash.com/photo-1618477388954-7852f32655ec?auto=format&fit=crop&q=80') ?>" 
+             alt="<?= e($post['title']) ?>"
+             class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-black/20"></div>
+
+        <!-- Post Meta -->
+        <div class="absolute bottom-0 left-0 right-0 p-6 md:p-8 max-w-4xl mx-auto">
+            <?php if (!empty($post['category'])): ?>
+                <span class="tag bg-white/10 backdrop-blur-sm text-white mb-4">
+                    <?= e($post['category']) ?>
+                </span>
             <?php endif; ?>
             
-            <!-- Comments List -->
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+                <?= e($post['title']) ?>
+            </h1>
+            
+            <div class="flex items-center flex-wrap gap-4 text-white">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full overflow-hidden mr-2 bg-gray-300">
+                        <img src="https://ui-avatars.com/api/?name=<?= urlencode($post['author_name'] ?? 'User') ?>&background=3b82f6&color=fff" 
+                             alt="<?= e($post['author_name'] ?? 'Unknown') ?>"
+                             class="w-full h-full object-cover">
+                    </div>
+                    <span><?= e($post['author_name'] ?? 'Unknown') ?></span>
+                </div>
+                <div class="flex items-center">
+                    <i data-lucide="calendar-days" class="w-4 h-4 mr-1"></i>
+                    <span><?= formatDate($post['created_at']) ?></span>
+                </div>
+                <div class="flex items-center">
+                    <i data-lucide="clock" class="w-4 h-4 mr-1"></i>
+                    <span><?= $post['reading_time_min'] ?? readingTime($post['content']) ?> min read</span>
+                </div>
+                <div class="flex items-center">
+                    <i data-lucide="eye" class="w-4 h-4 mr-1"></i>
+                    <span><?= number_format($post['views'] ?? 0) ?> views</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blog content -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="prose prose-lg max-w-none">
+            <?= nl2br(e($post['content'])) ?>
+        </div>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200">
+        <h2 class="text-2xl font-bold mb-6">Comments (<?= $commentCount ?? 0 ?>)</h2>
+
+        <!-- Add new comment form -->
+        <form action="<?= url('/posts/' . $post['id'] . '/comments') ?>" method="POST" class="mb-8">
+            <div class="flex items-start space-x-3">
+                <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-gray-200">
+                    <?php if ($isLoggedIn): ?>
+                        <img src="https://ui-avatars.com/api/?name=<?= urlencode(Session::get('username', 'User')) ?>&background=3b82f6&color=fff" 
+                             alt="Your avatar"
+                             class="w-full h-full object-cover">
+                    <?php else: ?>
+                        <div class="w-full h-full flex items-center justify-center bg-gray-300">
+                            <i data-lucide="user" class="w-5 h-5 text-gray-500"></i>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <div class="flex-1">
+                    <textarea name="content" 
+                              placeholder="<?= $isLoggedIn ? 'Write a comment...' : 'Login to write a comment...' ?>"
+                              class="w-full min-h-[100px] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                              <?= !$isLoggedIn ? 'disabled' : '' ?>></textarea>
+                    <div class="flex justify-end mt-2">
+                        <?php if ($isLoggedIn): ?>
+                            <button type="submit" 
+                                    class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                                <i data-lucide="send" class="w-4 h-4 mr-2"></i>
+                                Post Comment
+                            </button>
+                        <?php else: ?>
+                            <a href="<?= url('/login') ?>" 
+                               class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                                <i data-lucide="log-in" class="w-4 h-4 mr-2"></i>
+                                Login to Comment
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Comments list -->
+        <div class="space-y-6">
             <?php if (empty($comments)): ?>
-                <p class="text-gray-500 text-center py-8">No comments yet. Be the first to comment!</p>
+                <div class="text-center text-gray-500 py-8">
+                    <i data-lucide="message-circle" class="w-12 h-12 mx-auto mb-3 text-gray-300"></i>
+                    <p>No comments yet. Be the first to comment!</p>
+                </div>
             <?php else: ?>
-                <div class="space-y-6">
-                    <?php foreach ($comments as $comment): ?>
-                        <div class="border-b border-gray-100 pb-6 last:border-0">
-                            <div class="flex items-start space-x-4">
-                                <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold">
-                                    <?= strtoupper(substr($comment['author_name'] ?? 'U', 0, 1)) ?>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <span class="font-semibold text-primary">
-                                            <?= htmlspecialchars($comment['author_name'] ?? 'User') ?>
+                <?php foreach ($comments as $comment): ?>
+                    <div class="border-b border-gray-200 pb-6">
+                        <div class="flex items-start space-x-3">
+                            <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                                <img src="<?= e($comment['avatar_url'] ?? 'https://ui-avatars.com/api/?name=' . urlencode($comment['author_name'] ?? 'User') . '&background=6366f1&color=fff') ?>" 
+                                     alt="<?= e($comment['author_name'] ?? 'Unknown') ?>"
+                                     class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div>
+                                        <span class="font-semibold text-gray-900">
+                                            <?= e($comment['author_name'] ?? 'Unknown') ?>
                                         </span>
-                                        <span class="text-sm text-gray-400">
-                                            <?= date('M d, Y', strtotime($comment['created_at'])) ?>
+                                        <span class="text-gray-500 text-sm ml-2">
+                                            <?= timeAgo($comment['created_at']) ?>
                                         </span>
                                     </div>
-                                    <p class="text-gray-600">
-                                        <?= nl2br(htmlspecialchars($comment['content'])) ?>
-                                    </p>
+                                    
+                                    <?php if ($isLoggedIn && ($userId === $comment['author_id'] || $isAdmin)): ?>
+                                        <form action="<?= url('/dashboard/comments/' . $comment['id'] . '/delete') ?>" 
+                                              method="POST" 
+                                              class="inline"
+                                              onsubmit="return confirm('Are you sure you want to delete this comment?')">
+                                            <button type="submit" 
+                                                    class="p-1.5 text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
+                                                    title="Delete comment">
+                                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                            </button>
+                                        </form>
+                                    <?php endif; ?>
                                 </div>
+                                <p class="text-gray-700 whitespace-pre-wrap"><?= e($comment['content']) ?></p>
                             </div>
                         </div>
-                    <?php endforeach; ?>
-                </div>
+                    </div>
+                <?php endforeach; ?>
             <?php endif; ?>
-        </section>
+        </div>
     </div>
-</article>
+</main>
 
 <?php
 $content = ob_get_clean();
 require_once BASE_PATH . '/app/views/website/layouts/main.php';
 ?>
-

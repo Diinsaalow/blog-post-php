@@ -1,31 +1,19 @@
 <?php
-/**
- * Dashboard Create Post View
- */
-
+require_once BASE_PATH . '/app/helpers/functions.php';
 ob_start();
 ?>
 
 <!-- Back Link -->
 <div class="mb-6">
-    <a href="/blog-post/dashboard/posts" class="text-gray-500 hover:text-primary transition-colors flex items-center space-x-2">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-        </svg>
+    <a href="<?= url('/dashboard/posts') ?>" class="inline-flex items-center gap-2 text-gray-500 hover:text-blue-600 transition-colors">
+        <i data-lucide="chevron-left" class="w-5 h-5"></i>
         <span>Back to Posts</span>
     </a>
 </div>
 
-<!-- Flash Messages -->
-<?php if (!empty($error)): ?>
-    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-        <?= htmlspecialchars($error) ?>
-    </div>
-<?php endif; ?>
-
 <!-- Form -->
-<div class="bg-white rounded-xl shadow-md p-6">
-    <form action="/blog-post/dashboard/posts" method="POST" class="space-y-6">
+<div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+    <form action="<?= url('/dashboard/posts') ?>" method="POST" class="space-y-6">
         <!-- Title -->
         <div>
             <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
@@ -37,7 +25,7 @@ ob_start();
                 name="title" 
                 required
                 maxlength="160"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                 placeholder="Enter post title"
             >
             <p class="text-xs text-gray-400 mt-1">1-160 characters</p>
@@ -53,7 +41,7 @@ ob_start();
                 name="excerpt" 
                 rows="2"
                 maxlength="300"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-colors"
                 placeholder="Short summary of the post"
             ></textarea>
             <p class="text-xs text-gray-400 mt-1">Up to 300 characters</p>
@@ -69,7 +57,7 @@ ob_start();
                 name="content" 
                 rows="12"
                 required
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-colors font-serif"
                 placeholder="Write your post content here..."
             ></textarea>
         </div>
@@ -84,7 +72,7 @@ ob_start();
                 <select 
                     id="category" 
                     name="category"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                 >
                     <option value="General">General</option>
                     <option value="Technology">Technology</option>
@@ -108,7 +96,7 @@ ob_start();
                     min="1"
                     max="60"
                     value="5"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                 >
             </div>
         </div>
@@ -122,29 +110,33 @@ ob_start();
                 type="url" 
                 id="cover_image_url" 
                 name="cover_image_url"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                 placeholder="https://example.com/image.jpg"
             >
+            <div id="image-preview" class="mt-2 hidden">
+                <img src="" alt="Preview" class="w-32 h-20 object-cover rounded border border-gray-200">
+            </div>
         </div>
         
         <!-- Checkboxes -->
         <div class="flex items-center space-x-6">
             <label class="flex items-center space-x-2 cursor-pointer">
-                <input type="checkbox" name="is_published" value="1" checked class="w-4 h-4 text-accent rounded focus:ring-accent">
+                <input type="checkbox" name="is_published" value="1" checked class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 border-gray-300">
                 <span class="text-sm text-gray-700">Published</span>
             </label>
             <label class="flex items-center space-x-2 cursor-pointer">
-                <input type="checkbox" name="is_featured" value="1" class="w-4 h-4 text-accent rounded focus:ring-accent">
+                <input type="checkbox" name="is_featured" value="1" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 border-gray-300">
                 <span class="text-sm text-gray-700">Featured</span>
             </label>
         </div>
         
         <!-- Submit -->
         <div class="flex justify-end space-x-4">
-            <a href="/blog-post/dashboard/posts" class="px-6 py-3 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+            <a href="<?= url('/dashboard/posts') ?>" class="inline-flex items-center px-6 py-3 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
                 Cancel
             </a>
-            <button type="submit" class="px-6 py-3 bg-accent hover:bg-red-600 text-white rounded-lg transition-colors">
+            <button type="submit" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-sm">
+                <i data-lucide="save" class="w-4 h-4 mr-2"></i>
                 Create Post
             </button>
         </div>
@@ -155,4 +147,3 @@ ob_start();
 $content = ob_get_clean();
 require_once BASE_PATH . '/app/views/dashboard/layouts/main.php';
 ?>
-

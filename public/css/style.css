@@ -1,28 +1,130 @@
 /**
- * Blog Post Application - Website Styles
- * Custom styles that complement Tailwind CSS
+ * Bloggies - Custom Styles
+ * Additional styles that complement Tailwind CSS
  */
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+/* =========================================
+   Base Styles
+   ========================================= */
+
+:root {
+    --primary: oklch(0.623 0.214 259.815);
+    --primary-foreground: oklch(0.97 0.014 254.604);
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.141 0.005 285.823);
+    --muted: oklch(0.967 0.001 286.375);
+    --muted-foreground: oklch(0.552 0.016 285.938);
+    --border: oklch(0.92 0.004 286.32);
+    --ring: oklch(0.623 0.214 259.815);
+    --radius: 0.5rem;
 }
 
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
+* {
+    box-sizing: border-box;
 }
 
-::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
+html {
+    scroll-behavior: smooth;
 }
 
-::-webkit-scrollbar-thumb:hover {
-    background: #555;
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* Line clamp utility */
+/* =========================================
+   Typography
+   ========================================= */
+
+.font-serif {
+    font-family: 'Merriweather', Georgia, serif;
+}
+
+/* =========================================
+   Card Hover Effect
+   ========================================= */
+
+.card-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* =========================================
+   Tags
+   ========================================= */
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    border: 1px solid var(--border);
+    padding: 0.125rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    background-color: transparent;
+}
+
+.tag:hover {
+    background-color: var(--muted);
+}
+
+/* =========================================
+   Animations
+   ========================================= */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+.animation-delay-100 {
+    animation-delay: 100ms;
+}
+
+.animation-delay-200 {
+    animation-delay: 200ms;
+}
+
+.animation-delay-300 {
+    animation-delay: 300ms;
+}
+
+/* Slide down animation for mobile menu */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-slide-down {
+    animation: slideDown 0.3s ease-out forwards;
+}
+
+/* =========================================
+   Line Clamp (fallback)
+   ========================================= */
+
 .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -37,117 +139,203 @@
     overflow: hidden;
 }
 
-/* Smooth transitions */
-* {
-    scroll-behavior: smooth;
-}
+/* =========================================
+   Prose Styles (Blog Content)
+   ========================================= */
 
-/* Focus styles */
-input:focus,
-textarea:focus,
-select:focus {
-    outline: none;
-}
-
-/* Button hover effects */
-.btn-hover {
-    transition: all 0.2s ease-in-out;
-}
-
-.btn-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* Card hover effects */
-.card-hover {
-    transition: all 0.3s ease-in-out;
-}
-
-.card-hover:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-}
-
-/* Animation classes */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.animate-fadeIn {
-    animation: fadeIn 0.3s ease-out;
-}
-
-/* Prose styles for blog content */
 .prose {
-    line-height: 1.8;
-    color: #374151;
+    max-width: 65ch;
+    color: var(--foreground);
 }
 
 .prose p {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25em;
+    line-height: 1.75;
 }
 
-.prose h2,
-.prose h3 {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+.prose h2 {
+    font-size: 1.5em;
     font-weight: 700;
-    color: #1a1a2e;
+    margin: 2em 0 1em;
+    line-height: 1.3;
 }
 
-.prose a {
-    color: #e94560;
-    text-decoration: underline;
-}
-
-.prose a:hover {
-    text-decoration: none;
+.prose h3 {
+    font-size: 1.25em;
+    font-weight: 600;
+    margin: 1.5em 0 0.75em;
+    line-height: 1.4;
 }
 
 .prose ul,
 .prose ol {
-    margin-bottom: 1.5rem;
-    padding-left: 1.5rem;
+    margin: 1em 0;
+    padding-left: 1.5em;
 }
 
 .prose li {
-    margin-bottom: 0.5rem;
+    margin: 0.5em 0;
+}
+
+.prose a {
+    color: var(--primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.prose a:hover {
+    opacity: 0.8;
+}
+
+.prose img {
+    border-radius: var(--radius);
+    margin: 2em 0;
+    max-width: 100%;
+    height: auto;
 }
 
 .prose blockquote {
-    border-left: 4px solid #e94560;
-    padding-left: 1rem;
-    margin: 1.5rem 0;
+    border-left: 4px solid var(--primary);
+    padding-left: 1em;
+    margin: 1.5em 0;
     font-style: italic;
-    color: #6b7280;
-}
-
-.prose code {
-    background: #f3f4f6;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.875rem;
+    color: var(--muted-foreground);
 }
 
 .prose pre {
-    background: #1a1a2e;
-    color: #f5f5f5;
-    padding: 1rem;
-    border-radius: 8px;
+    background-color: var(--muted);
+    padding: 1em;
+    border-radius: var(--radius);
     overflow-x: auto;
-    margin: 1.5rem 0;
+    margin: 1.5em 0;
+}
+
+.prose code {
+    background-color: var(--muted);
+    padding: 0.2em 0.4em;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
 }
 
 .prose pre code {
-    background: transparent;
+    background-color: transparent;
     padding: 0;
 }
 
+/* =========================================
+   Toast Notifications
+   ========================================= */
+
+.toast {
+    position: fixed;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    animation: toastSlideIn 0.3s ease-out;
+}
+
+@keyframes toastSlideIn {
+    from {
+        transform: translateX(-50%) translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
+/* =========================================
+   Form Styles
+   ========================================= */
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    ring: 2px;
+    ring-color: var(--ring);
+}
+
+/* =========================================
+   Scrollbar Styles
+   ========================================= */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--muted);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--muted-foreground);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--foreground);
+}
+
+/* =========================================
+   Selection Styles
+   ========================================= */
+
+::selection {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+}
+
+/* =========================================
+   Utility Classes
+   ========================================= */
+
+.backdrop-blur-md {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.shadow-xs {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* =========================================
+   Responsive Adjustments
+   ========================================= */
+
+@media (max-width: 640px) {
+    .prose {
+        font-size: 0.9375rem;
+    }
+    
+    .prose h2 {
+        font-size: 1.25em;
+    }
+    
+    .prose h3 {
+        font-size: 1.125em;
+    }
+}
+
+/* =========================================
+   Print Styles
+   ========================================= */
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    body {
+        background: white;
+        color: black;
+    }
+    
+    a {
+        color: black;
+        text-decoration: underline;
+    }
+}
