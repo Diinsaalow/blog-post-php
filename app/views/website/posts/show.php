@@ -163,19 +163,48 @@ ob_start();
                                     </div>
                                     
                                     <?php if ($isLoggedIn && ($userId === $comment['author_id'] || $isAdmin)): ?>
-                                        <form action="<?= url('/dashboard/comments/' . $comment['id'] . '/delete') ?>" 
-                                              method="POST" 
-                                              class="inline"
-                                              onsubmit="return confirm('Are you sure you want to delete this comment?')">
-                                            <button type="submit" 
-                                                    class="p-1.5 text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
-                                                    title="Delete comment">
-                                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        <div class="flex items-center space-x-1">
+                                            <button type="button"
+                                                    class="p-1.5 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded transition-colors"
+                                                    title="Edit comment"
+                                                    onclick="toggleEditCommentForm(<?= (int) $comment['id'] ?>)">
+                                                <i data-lucide="edit-3" class="w-4 h-4"></i>
                                             </button>
-                                        </form>
+                                            <form action="<?= url('/comments/' . $comment['id'] . '/delete') ?>" 
+                                                  method="POST" 
+                                                  class="inline"
+                                                  onsubmit="return confirm('Are you sure you want to delete this comment?')">
+                                                <button type="submit" 
+                                                        class="p-1.5 text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
+                                                        title="Delete comment">
+                                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                                </button>
+                                            </form>
+                                        </div>
                                     <?php endif; ?>
                                 </div>
                                 <p class="text-gray-700 whitespace-pre-wrap"><?= e($comment['content']) ?></p>
+
+                                <?php if ($isLoggedIn && ($userId === $comment['author_id'] || $isAdmin)): ?>
+                                    <form id="edit-comment-form-<?= (int) $comment['id'] ?>"
+                                          action="<?= url('/comments/' . $comment['id']) ?>"
+                                          method="POST"
+                                          class="mt-3 hidden">
+                                        <textarea name="content"
+                                                  class="w-full min-h-[80px] p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"><?= e($comment['content']) ?></textarea>
+                                        <div class="flex justify-end mt-2 space-x-2">
+                                            <button type="button"
+                                                    class="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100"
+                                                    onclick="toggleEditCommentForm(<?= (int) $comment['id'] ?>)">
+                                                Cancel
+                                            </button>
+                                            <button type="submit"
+                                                    class="px-3 py-1.5 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700">
+                                                Save
+                                            </button>
+                                        </div>
+                                    </form>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -189,3 +218,11 @@ ob_start();
 $content = ob_get_clean();
 require_once BASE_PATH . '/app/views/website/layouts/main.php';
 ?>
+
+<script>
+    function toggleEditCommentForm(id) {
+        var form = document.getElementById('edit-comment-form-' + id);
+        if (!form) return;
+        form.classList.toggle('hidden');
+    }
+</script>

@@ -23,5 +23,9 @@ $router->get('/posts', 'website/PostController', 'index');
 // Posts - dynamic routes with parameters (order matters!)
 $router->get('/posts/category/{category}', 'website/PostController', 'category');
 $router->post('/posts/{postId}/comments', 'website/CommentController', 'store', ['Auth']);
+
+// Comments - update/delete from website (authenticated users)
+$router->post('/comments/{id}', 'website/CommentController', 'update', ['Auth']);
+$router->post('/comments/{id}/delete', 'website/CommentController', 'destroy', ['Auth']);
 $router->get('/posts/{slug}', 'website/PostController', 'show');
 

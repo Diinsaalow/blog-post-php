@@ -67,14 +67,22 @@ class CommentController extends Controller
 
         if (!$comment) {
             Session::flash('error', 'Comment not found.');
-            $this->redirect('/');
+            $this->redirect('/posts');
             return;
         }
 
-        // Check ownership
-        if (!$this->commentModel->isOwner((int) $id, Session::userId())) {
+        // Get post early so we can always redirect back to it
+        $post = $this->postModel->find((int) $comment['post_id']);
+        $postSlug = $post['slug'] ?? '';
+        $redirectUrl = $postSlug ? '/posts/' . $postSlug : '/posts';
+
+        // Check ownership (or admin)
+        if (
+            !$this->commentModel->isOwner((int) $id, Session::userId()) &&
+            !Session::isAdmin()
+        ) {
             Session::flash('error', 'You can only edit your own comments.');
-            $this->redirect('/');
+            $this->redirect($redirectUrl);
             return;
         }
 
@@ -82,7 +90,7 @@ class CommentController extends Controller
 
         if (!$content || strlen($content) < 1 || strlen($content) > 1000) {
             Session::flash('error', 'Comment must be between 1 and 1000 characters.');
-            $this->redirect('/');
+            $this->redirect($redirectUrl);
             return;
         }
 
@@ -97,9 +105,7 @@ class CommentController extends Controller
             Session::flash('error', 'Failed to update comment.');
         }
 
-        // Get post to redirect back
-        $post = $this->postModel->find($comment['post_id']);
-        $this->redirect('/posts/' . ($post['slug'] ?? ''));
+        $this->redirect($redirectUrl);
     }
 
     /**
